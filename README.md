@@ -6,9 +6,16 @@
 참가자의 라이엇 아이디로 api를 통해 랭크의 정보를 가져와서 등록할 수 있고 제한 점수안에서 팀을 구성해서 경기를 진행할 수 있도록 만들었습니다.
 
 ## 사용 기술
-- HTML
-- CSS
-- JavaScript
+
+### 프론트엔드
+- HTML / CSS / JavaScript
+
+### 벡엔드
+- Supabase — 데이터베이스, 인증(로그인/회원가입/비밀번호 재설정)
+- Supabase Edge Functions (Deno + TypeScript) — 점수 계산 서버 로직
+
+### 외부 API
+- Riot Games API — 소환사 랭크 정보 조회
 
 ## 주요 기능
 - 참가자 등록
