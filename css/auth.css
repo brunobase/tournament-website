@@ -1,0 +1,153 @@
+@charset "UTF-8";
+
+/* --- 1. 배경 및 레이아웃 --- */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f3f6; /* 메인 배경색과 통일 */
+    padding: 20px;
+}
+
+.auth-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eef0f3;
+    transition: transform 0.3s ease;
+}
+
+.signup-card {
+    max-width: 500px;
+}
+
+/* --- 2. 헤더 디자인 --- */
+.auth-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.auth-header h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a202c;
+    margin-bottom: 10px;
+}
+
+.auth-header p {
+    font-size: 14px;
+    color: #718096;
+    line-height: 1.5;
+}
+
+/* --- 3. 폼 스타일 --- */
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4a5568;
+    margin-bottom: 8px;
+}
+
+.auth-form .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* --- 4. 파란색 버튼 스타일 (핵심 수정 사항) --- */
+.btn-auth, .verify-btn {
+    background-color: #4A89FF; /* 브랜드 파란색 */
+    color: #ffffff;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-auth {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.verify-btn {
+    padding: 0 15px;
+    white-space: nowrap;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+/* 마우스를 올렸을 때 (Hover) */
+.btn-auth:hover, .verify-btn:hover {
+    background-color: #3573e6; /* 더 진한 파란색 */
+    box-shadow: 0 5px 15px rgba(74, 137, 255, 0.3); /* 푸른색 그림자 */
+    transform: translateY(-1px); /* 살짝 떠오름 */
+}
+
+/* 클릭했을 때 (Active) */
+.btn-auth:active, .verify-btn:active {
+    background-color: #1a56cc;
+    transform: scale(0.97); /* 버튼이 눌리는 효과 */
+    box-shadow: 0 2px 5px rgba(74, 137, 255, 0.2);
+}
+
+.input-with-btn {
+    display: flex;
+    gap: 8px;
+}
+
+/* --- 5. 하단 링크 및 기타 --- */
+.auth-footer {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #a0aec0;
+}
+
+.auth-footer a {
+    color: #4A89FF;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.auth-footer a:hover {
+    color: #1a56cc;
+    text-decoration: underline;
+}
+
+.auth-footer .divider {
+    margin: 0 10px;
+    color: #e2e8f0;
+}
+
+/* --- 6. 반응형 설정 --- */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 30px 20px;
+        border-radius: 0; /* 모바일에서는 꽉 차게 */
+        box-shadow: none;
+        border: none;
+        background: transparent;
+    }
+    .auth-wrapper {
+        background-color: #ffffff; /* 모바일은 흰색 배경 */
+    }
+    .auth-form .form-grid {
+        grid-template-columns: 1fr; /* 모바일에서 이름/학년 세로 배치 */
+    }
+}

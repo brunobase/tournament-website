@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>화정중 멸망전 - 팀 등록</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/team.css">
+    <style>
+        .input-container.error input { border: 1.5px solid #dc3545 !important; }
+        .input-container.success input { border: 1.5px solid #28a745 !important; }
+        .status-msg { font-size: 11px; margin-top: 5px; display: none; font-weight: 600; }
+        .error .status-msg { color: #dc3545; display: block; }
+        .success .status-msg { color: #28a745; display: block; }
+        .edit-mode { 
+            background-color: #4A89FF !important; 
+            color: #ffffff !important; 
+            border: none !important; 
+            font-weight: 800 !important;
+        }
+        .my-team-card { border: 2px solid #4A89FF !important; box-shadow: 0 4px 12px rgba(74, 137, 255, 0.1); }
+        #totalTeamScore.over { color: #dc3545 !important; text-decoration: underline; }
+        .empty-box { text-align: center; padding: 40px; color: #888; background: #f9f9f9; border-radius: 8px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+<header class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-left">
+            <span class="logo-text">화정중 <span class="sub-logo">멸망전</span></span>
+        </div>
+        <nav class="navbar-menu">
+            <ul>
+                <li><a href="index.html" class="nav-link">FA 명단</a></li>
+                <li><a href="team.html" class="nav-link active">팀 등록 현황</a></li>
+            </ul>
+        </nav>
+        <div class="navbar-right">
+            <a href="profile.html" class="profile-link"><i class="fa-solid fa-circle-user"></i></a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><h2>팀 등록하기</h2></div>
+            <div class="form-section">
+                <div class="form-group">
+                    <label>팀 이름</label>
+                    <div class="input-container" id="team-name-wrap">
+                        <input type="text" id="team-name-input" class="base-input" placeholder="팀 이름을 입력하세요">
+                        <span class="status-msg">이미 사용 중인 팀 이름입니다.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>팀 멤버 구성</label>
+                    <p class="input-desc">최대 <strong>145점</strong>까지 가능합니다.</p>
+                    <div class="member-input-list">
+                        <div class="member-item" data-pos="top">
+                            <div class="pos-icon"><img src="/image/top.svg" alt="TOP"></div>
+                            <div class="input-container flex-1">
+                                <input type="text" class="base-input member-name" placeholder="탑 소환사명">
+                            </div>
+                            <button class="add-member-btn">추가</button>
+                        </div>
+                        <div class="member-item" data-pos="jng">
+                            <div class="pos-icon"><img src="/image/jungle.svg" alt="JNG"></div>
+                            <div class="input-container flex-1">
+                                <input type="text" class="base-input member-name" placeholder="정글 소환사명">
+                            </div>
+                            <button class="add-member-btn">추가</button>
+                        </div>
+                        <div class="member-item" data-pos="mid">
+                            <div class="pos-icon"><img src="/image/mid.svg" alt="MID"></div>
+                            <div class="input-container flex-1">
+                                <input type="text" class="base-input member-name" placeholder="미드 소환사명">
+                            </div>
+                            <button class="add-member-btn">추가</button>
+                        </div>
+                        <div class="member-item" data-pos="adc">
+                            <div class="pos-icon"><img src="/image/bottom.svg" alt="ADC"></div>
+                            <div class="input-container flex-1">
+                                <input type="text" class="base-input member-name" placeholder="원딜 소환사명">
+                            </div>
+                            <button class="add-member-btn">추가</button>
+                        </div>
+                        <div class="member-item" data-pos="sup">
+                            <div class="pos-icon"><img src="/image/support.svg" alt="SUP"></div>
+                            <div class="input-container flex-1">
+                                <input type="text" class="base-input member-name" placeholder="서폿 소환사명">
+                            </div>
+                            <button class="add-member-btn">추가</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="total-score-box">
+                    <span>예상 팀 총점</span>
+                    <strong id="totalTeamScore">0 P</strong>
+                </div>
+                <button id="submit-team-btn" class="submit-btn">팀 등록 완료</button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="my-info-section">
+                <h3>내 팀 정보</h3>
+                <div id="my-team-area">
+                    <div class="empty-box bg-match">
+                        <div class="info-content"><span>소속된 팀이 없습니다.</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-section">
+                <div class="filter-row">
+                    <h3>등록된 팀 현황</h3>
+                    <div class="sort-options-row">
+                        <button class="sort-link active" data-sort="created_at">최신순</button>
+                        <button class="sort-link" data-sort="total_team_score_asc">점수 낮은순</button> 
+                        <button class="sort-link" data-sort="total_team_score_desc">점수 높은순</button>
+                    </div>
+                </div>
+                <div class="team-list-area" id="team-list-container"></div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/auth.js"></script>
+<script>
+    let tempMembers = { top: null, jng: null, mid: null, adc: null, sup: null };
+    let currentUserId = null;
+    let isNameValid = false;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) { window.location.href = 'login.html'; return; }
+        currentUserId = session.user.id;
+        
+        initTeamLogic();
+        await loadTeams(); 
+
+        document.querySelectorAll('.sort-link').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                document.querySelectorAll('.sort-link').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                await loadTeams(btn.getAttribute('data-sort'));
+            });
+        });
+    });
+
+    function initTeamLogic() {
+        const nameInput = document.getElementById('team-name-input');
+        const nameWrap = document.getElementById('team-name-wrap');
+        const statusMsg = nameWrap.querySelector('.status-msg');
+        
+        nameInput.addEventListener('input', async () => {
+            const val = nameInput.value.trim();
+            if(!val) { 
+                nameWrap.classList.remove('success', 'error'); 
+                isNameValid = false; 
+                return; 
+            }
+
+            const { data } = await supabaseClient
+                .from('teams')
+                .select('team_name')
+                .eq('team_name', val)
+                .maybeSingle();
+
+            if(data) { 
+                nameWrap.classList.add('error');
+                nameWrap.classList.remove('success'); 
+                statusMsg.innerText = "이미 사용 중인 팀 이름입니다.";
+                isNameValid = false; 
+            } else { 
+                nameWrap.classList.add('success'); 
+                nameWrap.classList.remove('error'); 
+                statusMsg.innerText = "사용 가능한 팀 이름입니다.";
+                isNameValid = true; 
+            }
+        });
+
+        document.querySelectorAll('.member-item').forEach(item => {
+            const pos = item.dataset.pos;
+            const btn = item.querySelector('.add-member-btn');
+            const input = item.querySelector('.member-name');
+
+            btn.addEventListener('click', async () => {
+                if (btn.classList.contains('edit-mode')) {
+                    tempMembers[pos] = null;
+                    btn.innerText = "추가";
+                    btn.classList.remove('edit-mode');
+                    input.disabled = false;
+                    updateTotalScore();
+                    return;
+                }
+
+                const nickname = input.value.trim();
+                if(!nickname) return;
+
+                const { data: sData, error } = await supabaseClient.from('summoner').select('*').eq('nickname', nickname).maybeSingle();
+                
+                if(error) return alert("소환사 조회 중 오류 발생");
+                if(!sData) return alert("존재하지 않는 소환사입니다.");
+                if(sData.team_name && sData.team_name !== 'FA') return alert(`이미 '${sData.team_name}' 팀 소속입니다.`);
+
+                const isDuplicate = Object.values(tempMembers).some(m => m && m.id === sData.id);
+                if (isDuplicate) return alert("이미 팀 멤버로 추가된 소환사입니다.");
+
+                tempMembers[pos] = { id: sData.id, name: sData.nickname, score: sData.score };
+                btn.innerText = "수정";
+                btn.classList.add('edit-mode'); 
+                input.disabled = true;
+                updateTotalScore();
+            });
+        });
+
+        document.getElementById('submit-team-btn').addEventListener('click', submitTeam);
+    }
+
+    function updateTotalScore() {
+        const total = Object.values(tempMembers).reduce((acc, cur) => acc + (cur ? cur.score : 0), 0);
+        const scoreEl = document.getElementById('totalTeamScore');
+        scoreEl.innerText = `${total} P`;
+        scoreEl.classList.toggle('over', total > 145);
+    }
+
+    async function submitTeam() {
+        const totalScore = parseInt(document.getElementById('totalTeamScore').innerText);
+        const teamNameValue = document.getElementById('team-name-input').value.trim();
+
+        if(!isNameValid) return alert("이미 사용 중인 팀 이름 혹은 팀 이름을 입력해주세요.");
+        if(Object.values(tempMembers).some(m => m === null)) return alert("5명을 모두 등록하세요.");
+        if(totalScore > 145) return alert("총점 제한(145P)을 초과했습니다.");
+
+        const { error: teamError } = await supabaseClient.from('teams').insert([{
+            team_name: teamNameValue,
+            top_id: tempMembers.top.id, jng_id: tempMembers.jng.id, mid_id: tempMembers.mid.id,
+            adc_id: tempMembers.adc.id, sup_id: tempMembers.sup.id,
+            total_team_score: totalScore, leader_id: currentUserId
+        }]);
+
+        if(teamError) return alert("팀 등록 중 오류 발생: " + teamError.message);
+
+        const memberIds = Object.values(tempMembers).map(m => m.id);
+        const { error: updateError } = await supabaseClient.from('summoner').update({ team_name: teamNameValue }).in('id', memberIds);
+
+        if(updateError) {
+            console.error("멤버 소속 업데이트 오류:", updateError.message);
+            alert("팀은 생성되었으나 일부 팀원의 소속 정보 업데이트에 실패했습니다.");
+        }
+
+        location.reload();
+    }
+
+    async function loadTeams(sortBy = 'created_at') {
+        const listContainer = document.getElementById('team-list-container');
+        const myTeamArea = document.getElementById('my-team-area');
+        
+        const { data: allSummoners, error: sError } = await supabaseClient
+            .from('summoner')
+            .select('id, nickname, score, team_name');
+        
+        if (sError) {
+            console.error("소환사 로드 실패:", sError.message);
+            return;
+        }
+
+        const summonerMap = {};
+        allSummoners?.forEach(s => { summonerMap[s.id] = s; });
+        
+        const myInfo = allSummoners?.find(s => s.id === currentUserId);
+        const myTeamName = myInfo?.team_name ? myInfo.team_name.trim() : null;
+
+        const { data: teams, error: tError } = await supabaseClient.from('teams').select('*');
+        if (tError) return console.error("팀 로드 실패:", tError);
+
+        if (sortBy === 'created_at') teams.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        else if (sortBy === 'total_team_score_asc') teams.sort((a, b) => a.total_team_score - b.total_team_score);
+        else if (sortBy === 'total_team_score_desc') teams.sort((a, b) => b.total_team_score - a.total_team_score);
+
+        listContainer.innerHTML = '';
+        let myTeamCardHtml = '';
+        let otherTeamsCount = 0;
+
+        teams.forEach(team => {
+            const getS = (id) => summonerMap[id] ? `${summonerMap[id].nickname}(${summonerMap[id].score})` : '미등록';
+            const currentTeamName = team.team_name ? team.team_name.trim() : "";
+            const isMyTeam = (myTeamName && myTeamName !== 'FA' && currentTeamName === myTeamName);
+
+            const cardHtml = `
+                <div class="team-card ${isMyTeam ? 'my-team-card' : ''}">
+                    <div class="team-card-header">
+                        <span class="team-name">${team.team_name} ${isMyTeam ? '<small style="color:#4A89FF;">(MY)</small>' : ''}</span>
+                        <span class="team-total-score">${team.total_team_score}pt</span>
+                    </div>
+                    <div class="member-grid">
+                        <div class="member-badge"><img src="/image/top.svg"> <span>${getS(team.top_id)}</span></div>
+                        <div class="member-badge"><img src="/image/jungle.svg"> <span>${getS(team.jng_id)}</span></div>
+                        <div class="member-badge"><img src="/image/mid.svg"> <span>${getS(team.mid_id)}</span></div>
+                        <div class="member-badge"><img src="/image/bottom.svg"> <span>${getS(team.adc_id)}</span></div>
+                        <div class="member-badge"><img src="/image/support.svg"> <span>${getS(team.sup_id)}</span></div>
+                    </div>
+                </div>`;
+
+            if (isMyTeam) {
+                myTeamCardHtml = cardHtml;
+            } else {
+                listContainer.innerHTML += cardHtml;
+                otherTeamsCount++;
+            }
+        });
+
+        if (myTeamCardHtml) {
+            myTeamArea.innerHTML = myTeamCardHtml;
+            const btn = document.getElementById('submit-team-btn');
+            if(btn) {
+                btn.disabled = true;
+                btn.innerText = "이미 팀에 소속됨";
+                btn.style.opacity = "0.6";
+            }
+        } else {
+            myTeamArea.innerHTML = `<div class="empty-box bg-match"><span>소속된 팀이 없습니다.</span></div>`;
+        }
+
+        if (otherTeamsCount === 0) {
+            listContainer.innerHTML = `<div class="empty-box">등록된 다른 팀이 없습니다.</div>`;
+        }
+    }
+</script>
+</body>
+</html>

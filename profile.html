@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>화정중 멸망전 - 프로필 설정</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/profile.css">
+    <style>
+        /* 그리드 시스템에서 전체 너비를 차지하도록 강제 */
+        .full-width { 
+            grid-column: 1 / -1 !important; 
+            width: 100% !important;
+        }
+        
+        /* 기타사항 입력창 스타일 - 오른쪽 비는 현상 해결 */
+        #edit-memo {
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif; /* 현대적인 글꼴 추가 */
+            font-size: 14px;
+            line-height: 1.6;
+            width: 100% !important;
+            display: block;
+            resize: none; /* 위아래 조절 금지 */
+            padding: 15px;
+            border: 1px solid #edf2f7;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-sizing: border-box; /* 패딩이 너비를 넘지 않게 함 */
+            margin-top: 5px;
+        }
+        
+        #edit-memo:focus { border-color: #4A89FF; outline: none; }
+        
+        /* 팀 초대 허용 박스 - 오른쪽 비는 현상 해결 */
+        .toggle-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #edf2f7;
+            width: 100% !important;
+            box-sizing: border-box;
+        }
+
+        /* 계정 삭제 버튼 */
+        .action-btn.delete-account {
+            margin-top: 8px;
+            color: #dc3545;
+            background: transparent;
+            border: 1px solid #dc3545;
+            font-size: 13px;
+        }
+        .action-btn.delete-account:hover { background: #fff5f5; }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-footer button { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; border: none; font-weight: 600; }
+        .btn-confirm-delete { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <span class="logo-text">화정중 <span class="sub-logo">멸망전</span></span>
+            </div>
+            <nav class="navbar-menu">
+                <ul>
+                    <li><a href="index.html" class="nav-link">FA 명단</a></li>
+                    <li><a href="team.html" class="nav-link">팀 등록 현황</a></li>
+                </ul>
+            </nav>
+            <div class="navbar-right">
+                <a href="profile.html" class="profile-link active"><i class="fa-solid fa-circle-user"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="profile-layout">
+            <aside class="profile-sidebar">
+                <div class="profile-card">
+                    <div class="profile-img-wrapper">
+                        <i class="fa-solid fa-circle-user main-profile-icon"></i>
+                    </div>
+                    <h2 class="user-name" id="display-nickname">로딩 중...</h2>
+                    <p class="user-id" id="display-riotid">-</p>
+                    
+                    <div class="account-actions">
+                        <button type="button" class="action-btn btn-interactive" id="btn-reset-pw"><i class="fa-solid fa-key"></i> 비밀번호 재설정</button>
+                        <button type="button" class="action-btn logout btn-interactive-danger" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</button>
+                        <button type="button" class="action-btn delete-account" id="btn-open-delete-modal"><i class="fa-solid fa-user-xmark"></i> 계정 삭제</button>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="profile-main">
+                <section class="settings-section">
+                    <h3>개인정보 수정</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>이름</label>
+                            <input type="text" id="edit-name" class="base-input">
+                        </div>
+                        <div class="form-group">
+                            <label>학년</label>
+                            <select id="edit-grade" class="base-input">
+                                <option value="1">1학년</option>
+                                <option value="2">2학년</option>
+                                <option value="3">3학년</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>이메일 주소</label>
+                            <input type="email" id="edit-email" class="base-input" readonly style="background: #f1f1f1;">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="settings-section">
+                    <h3>연동된 롤 계정 (FA 정보)</h3>
+                    <div class="form-group">
+                        <label>소환사명 및 태그</label>
+                        <div class="info-readonly-box">
+                            <i class="fa-solid fa-link"></i>
+                            <span class="account-name" id="edit-riotid">연동된 계정 없음</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>선호 포지션</label>
+                            <select id="edit-pos" class="base-input">
+                                <option value="top">탑</option>
+                                <option value="jungle">정글</option>
+                                <option value="mid">미드</option>
+                                <option value="bottom">원딜</option>
+                                <option value="support">서폿</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>팀 초대 허용</label>
+                            <div class="toggle-box">
+                                <span class="toggle-text">다른 팀의 초대를 받습니다</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="edit-invite">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>기타사항 (메모)</label>
+                            <textarea id="edit-memo" rows="4" maxlength="200" placeholder="팀원들에게 어필할 내용을 적어주세요."></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="footer-actions">
+                    <button type="button" class="btn-cancel btn-interactive-outline" onclick="location.reload()">취소</button>
+                    <button type="button" id="btn-save-profile" class="btn-save btn-interactive-main">변경사항 저장</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h4>계정 삭제 확인</h4></div>
+            <div class="modal-body">
+                <p>삭제된 데이터는 복구할 수 없습니다. 확인을 위해 비밀번호를 입력해주세요.</p>
+                <input type="password" id="delete-confirm-pw" class="base-input" placeholder="비밀번호 입력" style="width:100%; box-sizing:border-box;">
+            </div>
+            <div class="modal-footer">
+                <button id="btn-close-delete-modal">취소</button>
+                <button class="btn-confirm-delete" id="btn-confirm-delete-acc">삭제하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) { window.location.href = 'login.html'; return; }
+        const user = session.user;
+        
+        document.getElementById('display-nickname').innerText = user.user_metadata.username || "이름 없음";
+        document.getElementById('edit-name').value = user.user_metadata.username || "";
+        document.getElementById('edit-grade').value = user.user_metadata.grade || "1";
+        document.getElementById('edit-email').value = user.email;
+
+        const { data: summoner } = await supabaseClient.from('summoner').select('*').eq('id', user.id).maybeSingle();
+        if (summoner) {
+            document.getElementById('display-riotid').innerText = summoner.player_ids?.[0] || "";
+            document.getElementById('edit-riotid').innerText = summoner.player_ids?.join(', ') || "연동된 계정 없음";
+            document.getElementById('edit-pos').value = summoner.position;
+            document.getElementById('edit-invite').checked = summoner.is_invite_allowed;
+            document.getElementById('edit-memo').value = summoner.memo || "";
+        }
+
+        // 비밀번호 재설정 버튼 로직 추가
+        document.getElementById('btn-reset-pw').onclick = async () => {
+            if (!confirm("가입하신 이메일(" + user.email + ")로 비밀번호 재설정 링크를 보내시겠습니까?")) return;
+            try {
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(user.email);
+                if (error) throw error;
+                alert("이메일로 재설정 링크가 전송되었습니다. 이메일을 확인해주세요.");
+            } catch (err) {
+                alert("오류 발생: " + err.message);
+            }
+        };
+
+        document.getElementById('btn-logout').onclick = async () => {
+            await supabaseClient.auth.signOut();
+            alert("로그아웃 되었습니다.");
+            window.location.href = 'login.html';
+        };
+
+        const deleteModal = document.getElementById('delete-modal');
+        document.getElementById('btn-open-delete-modal').onclick = () => deleteModal.style.display = 'flex';
+        document.getElementById('btn-close-delete-modal').onclick = () => deleteModal.style.display = 'none';
+
+        document.getElementById('btn-confirm-delete-acc').onclick = async () => {
+            const password = document.getElementById('delete-confirm-pw').value;
+            if(!password) return alert("비밀번호를 입력해주세요.");
+            if(!confirm("진짜로 삭제하시겠습니까?")) return;
+
+            try {
+                const { error: loginError } = await supabaseClient.auth.signInWithPassword({ email: user.email, password: password });
+                if (loginError) throw new Error("비밀번호가 일치하지 않습니다.");
+                await supabaseClient.from('summoner').delete().eq('id', user.id);
+                alert("삭제되었습니다.");
+                await supabaseClient.auth.signOut();
+                window.location.href = 'index.html';
+            } catch (err) { alert(err.message); }
+        };
+
+        document.getElementById('btn-save-profile').onclick = async () => {
+            const btn = document.getElementById('btn-save-profile');
+            btn.disabled = true; btn.innerText = "저장 중...";
+            try {
+                await supabaseClient.auth.updateUser({ data: { username: document.getElementById('edit-name').value, grade: parseInt(document.getElementById('edit-grade').value) }});
+                if (summoner) {
+                    await supabaseClient.from('summoner').update({ 
+                        nickname: document.getElementById('edit-name').value,
+                        position: document.getElementById('edit-pos').value, 
+                        is_invite_allowed: document.getElementById('edit-invite').checked,
+                        memo: document.getElementById('edit-memo').value 
+                    }).eq('id', user.id);
+                }
+                alert("성공적으로 저장되었습니다.");
+                location.reload();
+            } catch (err) { alert("저장 실패: " + err.message); }
+            finally { btn.disabled = false; btn.innerText = "변경사항 저장"; }
+        };
+    });
+</script>
+</body>
+</html>
